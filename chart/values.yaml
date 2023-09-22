@@ -97,6 +97,9 @@ ingress:
     pathType: Prefix
     serviceName: openldap-lam
     servicePort: 80
+  tls:
+    enabled: false
+    secretName: tls-example-ingress
 
 configldap: 
   enabled: true
