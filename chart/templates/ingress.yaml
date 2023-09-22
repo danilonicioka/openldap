@@ -19,11 +19,11 @@ spec:
     - host: {{ .Values.ingress.host }}
       http:
         paths:
-        - path: {{ .Values.ingress.lam.path }}
-          pathType: {{ .Values.ingress.lam.pathType }}
+        - path: {{ .Values.ingress.path }}
+          pathType: {{ .Values.ingress.pathType }}
           backend:
             service:
-              name: {{ .Values.ingress.lam.serviceName }}
+              name: {{ .Values.ingress.serviceName }}
               port: 
-                number: {{ .Values.ingress.lam.servicePort }}
+                number: {{ .Values.ingress.servicePort }}
 {{- end }}
