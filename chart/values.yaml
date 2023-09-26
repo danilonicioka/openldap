@@ -98,7 +98,7 @@ ingress:
   serviceName: openldap-lam
   servicePort: 80
   tls:
-    enabled: true
+    enabled: false
     secretName: tls-lam-ingress
 
 configldap: 
