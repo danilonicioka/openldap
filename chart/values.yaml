@@ -95,10 +95,11 @@ ingress:
   host: lam.csic.ufpa.br
   path: /
   pathType: Prefix
-  serviceName: openldap-lam
+  serviceName: ldap-test-lam
   servicePort: 80
   tls:
-    enabled: false
+    enabled: true
+    clusterissuer: selfsigned-cluster-issuer
     secretName: tls-lam-ingress
 
 configldap: 

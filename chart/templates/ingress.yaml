@@ -6,7 +6,7 @@ metadata:
   annotations:
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
   {{- if .Values.ingress.tls.enabled }}
-      cert-manager.io/cluster-issuer: letsencrypt
+      cert-manager.io/cluster-issuer: {{ .Values.ingress.tls.clusterissuer }}
   {{- end }}
 spec:
   ingressClassName: {{ .Values.ingress.className }}
@@ -14,7 +14,9 @@ spec:
   tls:
   - hosts: 
     - {{ .Values.ingress.host }}
-    secretName: {{ .Values.ingress.secretName }}
+    {{- if .Values.ingress.tls.enabled }}
+    secretName: {{ .Values.ingress.tls.secretName }}
+    {{- end }}
   {{- end }}
   rules:
     - host: {{ .Values.ingress.host }}
