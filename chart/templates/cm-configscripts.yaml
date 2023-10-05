@@ -1,9 +1,9 @@
-{{- if .Values.customLdifFiles }}
+{{- if .Values.configscripts.enabled }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "openldap.fullname" . }}-ldifs
+  name: {{ template "openldap.fullname" . }}-configscripts
   labels:
     app: {{ template "openldap.name" . }}
     chart: {{ template "openldap.chart" . }}
@@ -11,7 +11,7 @@ metadata:
     heritage: {{ .Release.Service }}
 
 data:
-{{ (.Files.Glob "ldifs/*").AsConfig | indent 2 }}
+{{ toYaml .Values.configscripts.script | indent 2 }}
 
 ...
 {{- end }}

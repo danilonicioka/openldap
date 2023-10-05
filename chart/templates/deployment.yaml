@@ -29,49 +29,10 @@ spec:
         app: {{ template "openldap.name" . }}
         release: {{ .Release.Name }}
     spec:
-      {{- if or .Values.customLdifFiles .Values.tls.enabled }}
+      {{- if .Values.tls.enabled }}
       initContainers:
       {{- end }}
-      {{- if .Values.customLdifFiles }}
-      - name: {{ .Chart.Name }}-init-ldif
-        image: busybox
-        command: ['sh', '-c', 'cp /customldif/* /ldifworkingdir']
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        volumeMounts:
-        - name: customldif
-          mountPath: /customldif
-        - name: ldifworkingdir
-          mountPath: /ldifworkingdir
-        resources:
-{{ toYaml .Values.initResources | indent 10 }}
-      {{- end }}
-      {{- if .Values.configldap.enabled }}
-      - name: {{ .Chart.Name }}-init-configldap
-        image: busybox
-        command: ['sh', '-c', 'cp /customconfigldap/* /configldapworkingdir']
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        volumeMounts:
-        - name: customconfigldap
-          mountPath: /customconfigldap
-        - name: configldapworkingdir
-          mountPath: /configldapworkingdir
-        resources:
-{{ toYaml .Values.initResources | indent 10 }}
-      {{- end }}
-      {{- if .Values.customSchemaFiles }}
-      - name: {{ .Chart.Name }}-init-schema
-        image: busybox
-        command: ['sh', '-c', 'cp /customschema/* /schemaworkingdir']
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        volumeMounts:
-        - name: customschema
-          mountPath: /customschema
-        - name: schemaworkingdir
-          mountPath: /schemaworkingdir
-        resources:
-{{ toYaml .Values.initResources | indent 10 }}
-      {{- end }}
-            {{- if .Values.tls.enabled }}
+      {{- if .Values.tls.enabled }}
       - name: {{ .Chart.Name }}-init-tls
         image: busybox
         command: ['sh', '-c', 'cp /tls/* /certs']
@@ -124,12 +85,12 @@ spec:
               mountPath: /etc/ldap/slapd.d
               subPath: config-data
             {{- if .Values.customLdifFiles }}
-            - name: ldifworkingdir
-              mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom
+            - name: ldifs
+              mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom/ldifs
             {{- end }}
-            {{- if .Values.configldap.enabled }}
-            - name: configldapworkingdir
-              mountPath: /configldap
+            {{- if .Values.configscripts.enabled }}
+            - name: configscripts
+              mountPath: /configscripts
             {{- end }}
             {{- if .Values.customSchemaFiles }}
             - name: schemaworkingdir
@@ -178,25 +139,19 @@ spec:
     {{- end }}
       volumes:
         {{- if .Values.customLdifFiles }}
-        - name: customldif
+        - name: ldifs
           configMap:
-            name: {{ template "openldap.fullname" . }}-customldif
-        - name: ldifworkingdir
-          emptyDir: {}
+            name: {{ template "openldap.fullname" . }}-ldifs
         {{- end }}
-        {{- if .Values.configldap.enabled }}
-        - name: customconfigldap
+        {{- if .Values.configscripts.enabled }}
+        - name: configscripts
           configMap:
-            name: {{ template "openldap.fullname" . }}-customconfigldap
-        - name: configldapworkingdir
-          emptyDir: {}
+            name: {{ template "openldap.fullname" . }}-configscripts
         {{- end }}
         {{- if .Values.customSchemaFiles }}
         - name: customschema
           configMap:
             name: {{ template "openldap.fullname" . }}-customschema
-        - name: schemaworkingdir
-          emptyDir: {}
         {{- end }}         
         {{- if .Values.tls.enabled }}
         - name: tls

@@ -57,7 +57,7 @@ persistence:
   storageClass: "storageClassName"
 ```
 
-Em que `claimName` e `storageClassName` devem ser substituídos pelos nomes corretos do PVC e do SC, respectivamente.
+Em que `claimName` e `storageClassName` devem ser substituídos pelos nomes corretos do PVC e do SC, respectivamente, caso existam.
 
 ---
 
@@ -146,7 +146,7 @@ OBS: Quando é criado um arquivo de backup a partir do comando `slapcat`, o usu�
 Para facilitar a adição dos arquivos ldif, pode-se criar um script para ser executado por meio das seguintes configurações no arquivo `values.yaml`:
 
 ```
-configldap: 
+configscripts: 
   enabled: true
   script:
     ldap.sh: |
@@ -156,7 +156,7 @@ configldap:
 ```
 
 Ou seja, ao habilitar o configldap, o script `ldap.sh` será criado com o conteúdo indicado após a `|`.
-Esse arquivo será colocado dentro do container em `/configldap`. Assim, quando o pod estiver rodando, não precisaria acessá-lo para essa configuração inicial, basta executar o script criado com, por exemplo:
+Esse arquivo será colocado dentro do container em `/configscripts`. Assim, quando o pod estiver rodando, não precisaria acessá-lo para essa configuração inicial, basta executar o script criado com, por exemplo:
 
 ```
 kubectl exec -it -n openldap `kubectl get pods --no-headers -o custom-columns=":metadata.name" -n openldap | grep openldap-ldap` -- bash /configldap/ldap.sh
