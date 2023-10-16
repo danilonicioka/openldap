@@ -161,3 +161,36 @@ Esse arquivo será colocado dentro do container em `/configldap`. Assim, quando 
 ```
 kubectl exec -it -n openldap `kubectl get pods --no-headers -o custom-columns=":metadata.name" -n openldap | grep openldap-ldap` -- bash /configldap/ldap.sh
 ```
+
+# Pipeline
+
+A pipeline presente no repositório realiza o deploy desse helm chart a partir do [artifacts.hub](https://artifacthub.io/packages/helm/openldap-lam/openldap) e utiliza a imagem [dtzar/helm-kubectl](https://hub.docker.com/r/dtzar/helm-kubectl) para utilizar os comandos `helm` e `kubectl`.
+
+## Deploy
+
+- Adicionar o repositório do artifacts.hub e baixar os arquivos:
+
+```
+- helm repo add openldap-lam https://danilonicioka.github.io/openldap-lam/
+- helm repo update
+- helm pull openldap-lam/openldap --untar
+```
+
+- Após isso, a pasta ldifs no gitlab é copiada para dentro da pasta em que os arquivos foram baixados, a openldap:
+
+```
+- cp -rfp ldifs openldap
+```
+
+- Por fim, realiza-se o deploy do openldap a partir da pasta openldap e do arquivo values.yaml presente no gitlab:
+```
+- helm upgrade openldap openldap --install --values=values.yaml
+```
+
+## Config
+
+- Executa o script ldap.sh dentro do container do ldap definido no arquivo values.yaml
+
+```
+- kubectl exec -it -n openldap `kubectl get pods --no-headers -o custom-columns=":metadata.name" -n openldap | grep openldap-ldap` -- bash /configldap/ldap.sh
+```
