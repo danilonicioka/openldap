@@ -28,7 +28,9 @@ securityContext: {}
 service:
   type: ClusterIP
   ldapPort: 389
+  nodePort: 30004
   sslLdapPort: 636
+  sslnodePort: 30005
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -77,8 +79,8 @@ env:
   LDAP_REMOVE_CONFIG_AFTER_SETUP: "true"
   LDAP_SSL_HELPER_PREFIX: "ldap"
 
-adminPassword: 123
-configPassword: 12345
+adminPassword: admin
+configPassword: config
 
 customLdifFiles: true
 
@@ -89,7 +91,7 @@ persistence:
   storageClass: ""
 
 ingress:
-  enabled: true
+  enabled: false
   name: lam
   className: nginx
   host: lam.example.com
@@ -98,7 +100,7 @@ ingress:
   serviceName: openldap-lam
   servicePort: 80
   tls:
-    enabled: true
+    enabled: false
     clusterissuer: selfsigned-cluster-issuer
     secretName: tls-lam-ingress
 
@@ -126,7 +128,7 @@ lam:
     # default language, e.g. en_US, de_DE, fr_FR, ...
     LAM_LANG: en_US
     # LAM configuration master password and password for server profile "lam"
-    LAM_PASSWORD: lam123
+    LAM_PASSWORD: password
     ADMIN_USER: cn=admin,dc=example
   persistence:
     enabled: true

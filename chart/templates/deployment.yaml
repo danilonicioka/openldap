@@ -86,11 +86,11 @@ spec:
               subPath: config-data
             {{- if .Values.customLdifFiles }}
             - name: ldifs
-              mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom/ldifs
+              mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom/
             {{- end }}
-            {{- if .Values.configscripts.enabled }}
-            - name: configscripts
-              mountPath: /configscripts
+            {{- if .Values.configldap.enabled }}
+            - name: configldap
+              mountPath: /configldap
             {{- end }}
             {{- if .Values.customSchemaFiles }}
             - name: schemaworkingdir
@@ -143,10 +143,10 @@ spec:
           configMap:
             name: {{ template "openldap.fullname" . }}-ldifs
         {{- end }}
-        {{- if .Values.configscripts.enabled }}
-        - name: configscripts
+        {{- if .Values.configldap.enabled }}
+        - name: configldap
           configMap:
-            name: {{ template "openldap.fullname" . }}-configscripts
+            name: {{ template "openldap.fullname" . }}-customconfigldap
         {{- end }}
         {{- if .Values.customSchemaFiles }}
         - name: customschema
