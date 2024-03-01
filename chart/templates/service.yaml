@@ -34,16 +34,16 @@ spec:
       protocol: TCP
       port: {{ .Values.service.ldapPort }}
       targetPort: ldap
-      {{- if eq .Values.service.type "NodePort" -}}
+      {{- if eq .Values.service.type "NodePort" }}
       nodePort: {{ .Values.service.nodePort }}
-      {{- end -}}
+      {{- end }}
     - name: ssl-ldap
       protocol: TCP
       port: {{ .Values.service.sslLdapPort }}
       targetPort: ssl-ldap
-      {{- if eq .Values.service.type "NodePort" -}}
+      {{- if eq .Values.service.type "NodePort" }}
       nodePort: {{ .Values.service.sslnodePort }}
-      {{- end -}}
+      {{- end }}
   selector:
     app: {{ template "openldap.name" . }}
     release: {{ .Release.Name }}
